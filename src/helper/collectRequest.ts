@@ -1,9 +1,13 @@
+import "dotenv/config";
 import { Request } from "express";
 import { RequestDataFromSDKs } from "../interfaces/Collection";
-import "dotenv/config";
 import { REQUEST_COLLECTION_ENDPOINT } from "../utils/config";
 
-function createSDKRequestData(req: Request, obj: any): RequestDataFromSDKs {
+function createSDKRequestData(
+  req: Request,
+  obj: any,
+  statusCode: number
+): RequestDataFromSDKs {
   // Ensure body is properly stringified without double-stringification
   let bodyString: string;
   if (typeof obj === "string") {
@@ -25,7 +29,7 @@ function createSDKRequestData(req: Request, obj: any): RequestDataFromSDKs {
     headers: headersString,
     ipAddress: req.ip || "",
     method: req.method,
-    statusCode: req.statusCode || 0,
+    statusCode: statusCode || 0,
     timestamp: Math.floor(Date.now() / 1000),
     url: req.url,
   };
@@ -83,9 +87,10 @@ async function sendRequestToAnomalyServers(
 export async function collectRequest(
   req: Request,
   obj: any,
+  statusCode: number,
   apiKey: string,
   appId: string
 ) {
-  const newSDKRequestData = createSDKRequestData(req, obj);
+  const newSDKRequestData = createSDKRequestData(req, obj, statusCode);
   await sendRequestToAnomalyServers(newSDKRequestData, apiKey, appId);
 }

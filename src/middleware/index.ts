@@ -14,7 +14,7 @@ export function Anomaly(config: AnomalyMiddlewareConfig): RequestHandler {
     // Only override res.send since res.json and other response methods call res.send internally
     const originalSend = res.send;
     res.send = function (body: any) {
-      collectRequest(req, body, config.apiKey, config.appId);
+      collectRequest(req, body, res.statusCode, config.apiKey, config.appId);
       return originalSend.call(this, body);
     };
 
