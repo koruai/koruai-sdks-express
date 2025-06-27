@@ -6,4 +6,9 @@ export interface AnomalyMiddlewareConfig {
   apiKey: string;
   /** Application identifier */
   appId: string;
+
+  /**
+   * Block Realtime
+   */
+  blockRealtime?: boolean;
 }

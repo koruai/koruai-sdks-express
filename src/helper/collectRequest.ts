@@ -2,6 +2,7 @@ import "dotenv/config";
 import { Request } from "express";
 import { RequestDataFromSDKs } from "../interfaces/Collection";
 import { REQUEST_COLLECTION_ENDPOINT } from "../utils/config";
+import { RequestInterfaceAtClickhouse } from "../interfaces/Request";
 
 function createSDKRequestData(
   req: Request,
@@ -37,11 +38,18 @@ function createSDKRequestData(
   return newSDKRequestData;
 }
 
+/**
+ * This function sends the request data to the AnomalyAI servers.
+ * @param requestData - The request data to send to the AnomalyAI servers.
+ * @param apiKey - The API key for the AnomalyAI servers.
+ * @param appId - The app ID for the AnomalyAI servers.
+ * @returns The request data at Clickhouse if the request is successful, false otherwise.
+ */
 async function sendRequestToAnomalyServers(
   requestData: RequestDataFromSDKs,
   apiKey: string,
   appId: string
-) {
+): Promise<RequestInterfaceAtClickhouse | false> {
   if (!REQUEST_COLLECTION_ENDPOINT) {
     console.error("REQUEST_COLLECTION_ENDPOINT is not set");
     return false;
@@ -69,7 +77,27 @@ async function sendRequestToAnomalyServers(
       return false;
     }
 
-    return true;
+    const data = (await response.json()) as {
+      newRequestDataAtClickhouse: RequestInterfaceAtClickhouse;
+    };
+
+    if (!data) {
+      console.error(
+        "Data is undefined from request collection endpoint response. ",
+        data
+      );
+      return false;
+    }
+
+    if (!data.newRequestDataAtClickhouse) {
+      console.error(
+        "newRequestDataAtClickhouse is undefined from request collection endpoint response. ",
+        data
+      );
+      return false;
+    }
+
+    return data.newRequestDataAtClickhouse;
   } catch (error) {
     console.error(
       "Error sending request to request collection endpoint: ",
@@ -90,7 +118,7 @@ export async function collectRequest(
   statusCode: number,
   apiKey: string,
   appId: string
-) {
+): Promise<RequestInterfaceAtClickhouse | false> {
   const newSDKRequestData = createSDKRequestData(req, obj, statusCode);
-  await sendRequestToAnomalyServers(newSDKRequestData, apiKey, appId);
+  return await sendRequestToAnomalyServers(newSDKRequestData, apiKey, appId);
 }
