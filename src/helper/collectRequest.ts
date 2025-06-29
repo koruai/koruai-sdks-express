@@ -32,7 +32,7 @@ function createSDKRequestData(
     method: req.method,
     statusCode: statusCode || 0,
     timestamp: Math.floor(Date.now() / 1000),
-    url: req.url,
+    url: req.originalUrl,
   };
 
   return newSDKRequestData;
