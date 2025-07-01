@@ -1,2 +1,2 @@
 export const REQUEST_COLLECTION_ENDPOINT =
-  "http://localhost:3001/collect-request";
+  "https://anomaly-request-collector-api-233311529656.europe-west1.run.app/collect-request";
