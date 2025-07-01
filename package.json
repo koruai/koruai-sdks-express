@@ -17,7 +17,8 @@
   ],
   "author": "aboveStars",
   "license": "Apache 2.0",
-  "description": "",
+  "description": "Anomaly Express is a security framework for Express.js that provides a set of tools and utilities to help you build secure applications.",
+  "repository": "https://github.com/aboveStars/anomaly-express",
   "devDependencies": {
     "@types/node": "^24.0.3",
     "typescript": "^5.8.3"
