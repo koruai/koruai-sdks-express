@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { Request } from "express";
 import { RequestDataFromSDKs } from "../interfaces/Collection";
 import { REQUEST_COLLECTION_ENDPOINT } from "../utils/config";
