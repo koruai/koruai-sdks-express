@@ -1,13 +1,13 @@
 import { Request } from "express";
-import { RequestDataFromSDKs } from "../interfaces/Collection";
+import { RequestCollectionDataFromSDK } from "../interfaces/Collection";
 import { REQUEST_COLLECTION_ENDPOINT } from "../utils/config";
 import { RequestInterfaceAtClickhouse } from "../interfaces/Request";
 
-function createSDKRequestData(
+export function createSDKRequestData(
   req: Request,
   obj: any,
   statusCode: number
-): RequestDataFromSDKs {
+): RequestCollectionDataFromSDK {
   // Ensure body is properly stringified without double-stringification
   let bodyString: string;
   if (typeof obj === "string") {
@@ -24,7 +24,7 @@ function createSDKRequestData(
     headersString = JSON.stringify(req.headers);
   }
 
-  const newSDKRequestData: RequestDataFromSDKs = {
+  const newSDKRequestData: RequestCollectionDataFromSDK = {
     body: bodyString,
     headers: headersString,
     ipAddress: req.ip || "",
@@ -32,6 +32,7 @@ function createSDKRequestData(
     statusCode: statusCode || 0,
     timestamp: Math.floor(Date.now() / 1000),
     url: req.originalUrl,
+    anomaly: null,
   };
 
   return newSDKRequestData;
@@ -45,7 +46,7 @@ function createSDKRequestData(
  * @returns The request data at Clickhouse if the request is successful, false otherwise.
  */
 async function sendRequestToAnomalyServers(
-  requestData: RequestDataFromSDKs,
+  requestData: RequestCollectionDataFromSDK,
   apiKey: string,
   appId: string
 ): Promise<RequestInterfaceAtClickhouse | false> {
@@ -112,12 +113,9 @@ async function sendRequestToAnomalyServers(
  * @param obj
  */
 export async function collectRequest(
-  req: Request,
-  obj: any,
-  statusCode: number,
+  requestDataFromSDK: RequestCollectionDataFromSDK,
   apiKey: string,
   appId: string
 ): Promise<RequestInterfaceAtClickhouse | false> {
-  const newSDKRequestData = createSDKRequestData(req, obj, statusCode);
-  return await sendRequestToAnomalyServers(newSDKRequestData, apiKey, appId);
+  return await sendRequestToAnomalyServers(requestDataFromSDK, apiKey, appId);
 }

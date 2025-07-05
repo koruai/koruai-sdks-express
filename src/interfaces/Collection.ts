@@ -1,4 +1,6 @@
-export interface RequestDataFromSDKs {
+import { ResultFromCheckingFunction } from "./Policy";
+
+export interface RequestCollectionDataFromSDK {
   timestamp: number;
   url: string;
   method: string;
@@ -6,4 +8,5 @@ export interface RequestDataFromSDKs {
   body: string;
   ipAddress: string;
   statusCode: number;
+  anomaly: null | ResultFromCheckingFunction;
 }
