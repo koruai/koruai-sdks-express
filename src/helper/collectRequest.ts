@@ -6,7 +6,8 @@ import { RequestInterfaceAtClickhouse } from "../interfaces/Request";
 export function createSDKRequestData(
   req: Request,
   obj: any,
-  statusCode: number
+  statusCode: number,
+  duration_ms: number
 ): RequestCollectionDataFromSDK {
   // Ensure body is properly stringified without double-stringification
   let bodyString: string;
@@ -32,6 +33,7 @@ export function createSDKRequestData(
     statusCode: statusCode || 0,
     timestamp: Math.floor(Date.now() / 1000),
     url: req.originalUrl,
+    duration_ms: duration_ms,
     anomaly: null,
   };
 

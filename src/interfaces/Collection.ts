@@ -8,5 +8,6 @@ export interface RequestCollectionDataFromSDK {
   body: string;
   ipAddress: string;
   statusCode: number;
+  duration_ms: number;
   anomaly: null | ResultFromCheckingFunction;
 }

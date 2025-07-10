@@ -22,16 +22,24 @@ export function Anomaly(config: AnomalyMiddlewareConfig): RequestHandler {
   );
 
   return (req: Request, res: Response, next: NextFunction): void => {
+    // Start moment of the request in high resolution time.
+    const start = process.hrtime();
+
     // Only override res.send since res.json and other response methods call res.send internally
     const originalSend = res.send.bind(res);
     res.send = async function (this: Response, body: any) {
       res.send = originalSend;
 
+      // Calculate the duration of the request in milliseconds.
+      const diff = process.hrtime(start);
+      const duration_ms = diff[0] * 1000 + diff[1] / 1e6;
+
       // Creating RequestCollectionData from the request.
       let requestCollectionData = createSDKRequestData(
         req,
         body,
-        res.statusCode
+        res.statusCode,
+        duration_ms
       );
 
       // Modifying the requestCollectionData with the anomaly result if blockRealtime is true.
