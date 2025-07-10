@@ -33,13 +33,14 @@ export function Anomaly(config: AnomalyMiddlewareConfig): RequestHandler {
       // Calculate the duration of the request in milliseconds.
       const diff = process.hrtime(start);
       const duration_ms = diff[0] * 1000 + diff[1] / 1e6;
+      const duration_uint32 = Math.floor(duration_ms) >>> 0; // Convert to unsigned 32-bit integer.
 
       // Creating RequestCollectionData from the request.
       let requestCollectionData = createSDKRequestData(
         req,
         body,
         res.statusCode,
-        duration_ms
+        duration_uint32
       );
 
       // Modifying the requestCollectionData with the anomaly result if blockRealtime is true.
