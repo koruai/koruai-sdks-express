@@ -44,11 +44,16 @@ export function Anomaly(config: AnomalyMiddlewareConfig): RequestHandler {
       );
 
       // Modifying the requestCollectionData with the anomaly result if blockRealtime is true.
-      if (config.blockRealtime)
+      if (config.blockRealtime) {
+        const anomalyResult = policyManager.checkRequestForAnomaly(
+          requestCollectionData
+        );
         requestCollectionData = {
           ...requestCollectionData,
-          anomaly: policyManager.checkRequestForAnomaly(requestCollectionData),
+          anomaly: anomalyResult,
+          blocked: anomalyResult?.is_anomaly ? 1 : 0,
         };
+      }
 
       // Send collected request to Anomaly servers.
       collectRequest(requestCollectionData, config.apiKey, config.appId);

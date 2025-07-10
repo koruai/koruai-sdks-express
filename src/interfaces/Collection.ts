@@ -10,4 +10,5 @@ export interface RequestCollectionDataFromSDK {
   statusCode: number;
   duration_ms: number;
   anomaly: null | ResultFromCheckingFunction;
+  blocked: number;
 }

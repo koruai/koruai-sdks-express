@@ -34,7 +34,8 @@ export function createSDKRequestData(
     timestamp: Math.floor(Date.now() / 1000),
     url: req.originalUrl,
     duration_ms: duration_ms,
-    anomaly: null,
+    anomaly: null, // null for now, will be filled in by the SDK
+    blocked: 0, // 0 for now, will be filled in by the SDK
   };
 
   return newSDKRequestData;
