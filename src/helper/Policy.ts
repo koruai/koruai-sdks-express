@@ -1,4 +1,7 @@
-import { PolicyDataAtClickhouse } from "../interfaces/Policy";
+import {
+  PolicyDataAtClickhouse,
+  ResultFromCheckRequestForAnomalyFunction,
+} from "../interfaces/Policy";
 import {
   FETCH_POLICIES_ENDPOINT,
   FETCH_POLICIES_INTERVAL_IN_SECONDS,
@@ -137,7 +140,7 @@ export class PolicyManager {
 
   public checkRequestForAnomaly(
     requestDataFromSDK: RequestCollectionDataFromSDK
-  ) {
+  ): ResultFromCheckRequestForAnomalyFunction | null {
     const relatedPolicy = this.getPolicyByEndpointAndMethod(requestDataFromSDK);
     if (!relatedPolicy) {
       console.warn(
@@ -160,6 +163,6 @@ export class PolicyManager {
       return null;
     }
 
-    return result;
+    return { ...result, detected_by_policy_id: relatedPolicy.id };
   }
 }

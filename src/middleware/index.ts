@@ -52,6 +52,7 @@ export function Anomaly(config: AnomalyMiddlewareConfig): RequestHandler {
           ...requestCollectionData,
           anomaly: anomalyResult,
           blocked: anomalyResult?.is_anomaly ? 1 : 0,
+          detected_by_policy_id: anomalyResult?.detected_by_policy_id || "",
         };
       }
 

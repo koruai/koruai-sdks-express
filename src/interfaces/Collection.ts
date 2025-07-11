@@ -10,5 +10,6 @@ export interface RequestCollectionDataFromSDK {
   statusCode: number;
   duration_ms: number;
   anomaly: null | ResultFromCheckingFunction;
+  detected_by_policy_id: string;
   blocked: number;
 }

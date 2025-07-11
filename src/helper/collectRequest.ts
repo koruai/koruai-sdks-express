@@ -35,6 +35,7 @@ export function createSDKRequestData(
     url: req.originalUrl,
     duration_ms: duration_ms,
     anomaly: null, // null for now, will be filled in by the SDK
+    detected_by_policy_id: "", // empty string for now, will be filled in by the SDK or Server (depends if realtime blocking is enabled)
     blocked: 0, // 0 for now, will be filled in by the SDK
   };
 

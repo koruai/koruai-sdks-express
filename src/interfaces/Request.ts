@@ -11,6 +11,7 @@ export interface RequestInterfaceAtClickhouse {
   url: string;
   anomaly_is_anomaly: number;
   anomaly_description: string;
+  detected_by_policy_id: string;
   duration_ms: number;
   blocked: number;
 }
