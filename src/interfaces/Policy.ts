@@ -8,6 +8,7 @@ export interface PolicyDataAtClickhouse {
   timestamp: string;
   user_uuid: string;
   url: string;
+  status: "active" | "inactive" | "monitoring";
 }
 
 export interface PolicyDataFromAi {
