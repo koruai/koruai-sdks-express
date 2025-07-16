@@ -1,4 +1,4 @@
-const environment: "production" | "development" = "development";
+const environment: "production" | "development" = "production";
 
 export const REQUEST_COLLECTION_ENDPOINT =
   // @ts-ignore
