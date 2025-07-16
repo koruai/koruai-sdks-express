@@ -9,6 +9,7 @@ export interface PolicyDataAtClickhouse {
   user_uuid: string;
   url: string;
   status: "active" | "inactive" | "monitoring";
+  severity: "low" | "medium" | "high";
 }
 
 export interface PolicyDataFromAi {
@@ -17,6 +18,7 @@ export interface PolicyDataFromAi {
   method: string;
   title: string;
   url: string;
+  severity: "low" | "medium" | "high";
 }
 
 /**
