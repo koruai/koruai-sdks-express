@@ -21,7 +21,10 @@ export class PolicyManager {
   private refreshInterval: ReturnType<typeof setInterval> | null = null;
 
   private policies: PolicyDataAtClickhouse[] | null = null;
-  private endpointMapper: EndpointMapperInterfaceAtClickhouse | null = null;
+  private endpointMapper:
+    | EndpointMapperInterfaceAtClickhouse
+    | "no_endpoint_mapper"
+    | null = null;
 
   constructor(
     blockRealtime: boolean | undefined,
@@ -56,7 +59,9 @@ export class PolicyManager {
 
       const data = (await response.json()) as {
         policies: PolicyDataAtClickhouse[];
-        endpointMapper: EndpointMapperInterfaceAtClickhouse;
+        endpointMapper:
+          | EndpointMapperInterfaceAtClickhouse
+          | "no_endpoint_mapper";
       };
 
       if (!data) {
@@ -171,6 +176,12 @@ export class PolicyManager {
   ): ResultFromCheckRequestForAnomalyFunction | null {
     if (!this.endpointMapper) {
       console.error("Endpoint mapper is null at the moment.");
+      return null;
+    }
+
+    if (this.endpointMapper === "no_endpoint_mapper") {
+      console.warn("No Policy Endpoint Mapping Found.");
+      console.warn("This request will be checked in our servers later.");
       return null;
     }
 
