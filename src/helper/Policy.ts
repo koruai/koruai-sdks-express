@@ -9,14 +9,19 @@ import {
 
 import { ResultFromCheckingFunction } from "../interfaces/Policy";
 import { RequestCollectionDataFromSDK } from "../interfaces/Collection";
+import {
+  EndpointMapperInterfaceAtClickhouse,
+  ResultFromMatchedUrlToEndpointFunction,
+} from "./EndpointMapper";
 
 export class PolicyManager {
   private appId: string;
   private apiKey: string;
 
-  private refreshInterval: NodeJS.Timeout | null = null;
+  private refreshInterval: ReturnType<typeof setInterval> | null = null;
 
   private policies: PolicyDataAtClickhouse[] | null = null;
+  private endpointMapper: EndpointMapperInterfaceAtClickhouse | null = null;
 
   constructor(
     blockRealtime: boolean | undefined,
@@ -51,18 +56,29 @@ export class PolicyManager {
 
       const data = (await response.json()) as {
         policies: PolicyDataAtClickhouse[];
+        endpointMapper: EndpointMapperInterfaceAtClickhouse;
       };
 
       if (!data) {
         console.error("No data received from anomaly servers");
+        this.endpointMapper = null;
         return (this.policies = null);
       }
 
       const policies = data.policies;
       if (!policies) {
         console.error("No policies received from anomaly servers");
+        this.endpointMapper = null;
         return (this.policies = null);
       }
+
+      if (!data.endpointMapper) {
+        console.error("No endpoint mapper received from anomaly servers");
+        this.endpointMapper = null;
+        return (this.policies = policies);
+      }
+
+      this.endpointMapper = data.endpointMapper;
 
       return (this.policies = policies);
     } catch (error) {
@@ -89,30 +105,42 @@ export class PolicyManager {
     return this.policies;
   }
 
-  private getPolicyByEndpointAndMethod(
-    requestDataFromSDK: RequestCollectionDataFromSDK
+  private getEndpointMappingResultOfRequest(
+    endpointMapperData: EndpointMapperInterfaceAtClickhouse,
+    requestDataFromSdk: RequestCollectionDataFromSDK
   ) {
+    try {
+      const matchUrlToEndpointFunction = eval(
+        "(" + endpointMapperData.match_url_to_endpoint_function + ")"
+      );
+
+      const result = matchUrlToEndpointFunction(
+        requestDataFromSdk.url
+      ) as ResultFromMatchedUrlToEndpointFunction;
+
+      return result.endpoint;
+    } catch (error) {
+      console.error("Error while getting endpoint for this request: ", error);
+      return false;
+    }
+  }
+
+  private getPolicyByEndpointAndMethod(endpoint: string, method: string) {
     if (this.policies === null) {
       console.error("Policies are null at the moment.");
       return false;
     }
 
-    // Problem is url from SDK is not base url so it contains query params etc.
-    // We need to remove query params and compare the base url
-    const baseUrlFromRequest = requestDataFromSDK.url.split("?")[0];
-
     const policy = this.policies.find(
-      (policy) =>
-        policy.url === baseUrlFromRequest &&
-        policy.method === requestDataFromSDK.method
+      (policy) => policy.url === endpoint && policy.method === method
     );
 
     if (!policy) {
       console.error(
         "No policy found for the request: ",
-        baseUrlFromRequest,
+        endpoint,
         " and ",
-        requestDataFromSDK.method
+        method
       );
       return false;
     }
@@ -141,7 +169,27 @@ export class PolicyManager {
   public checkRequestForAnomaly(
     requestDataFromSDK: RequestCollectionDataFromSDK
   ): ResultFromCheckRequestForAnomalyFunction | null {
-    const relatedPolicy = this.getPolicyByEndpointAndMethod(requestDataFromSDK);
+    if (!this.endpointMapper) {
+      console.error("Endpoint mapper is null at the moment.");
+      return null;
+    }
+
+    const endpoint = this.getEndpointMappingResultOfRequest(
+      this.endpointMapper,
+      requestDataFromSDK
+    );
+    if (!endpoint) {
+      console.warn(
+        "Endpoint could not be found for the request. Aborting realtime anomaly check."
+      );
+      console.warn("This request will be checked in our servers later.");
+      return null;
+    }
+
+    const relatedPolicy = this.getPolicyByEndpointAndMethod(
+      endpoint,
+      requestDataFromSDK.method
+    );
     if (!relatedPolicy) {
       console.warn(
         "Related policy could not be found for the request. Aborting realtime anomaly check."
