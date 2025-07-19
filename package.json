@@ -1,6 +1,6 @@
 {
   "name": "koruai",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -18,7 +18,7 @@
   "author": "aboveStars",
   "license": "Apache 2.0",
   "description": "AI-powered security monitoring middleware for Express.js applications. Detects anomalies and threats in real-time with intelligent request analysis.",
-  "repository": "https://github.com/aboveStars/koruai-express-sdk",
+  "repository": "https://github.com/aboveStars/koruai-sdks-express",
   "devDependencies": {
     "@types/node": "^24.0.3",
     "typescript": "^5.8.3"
