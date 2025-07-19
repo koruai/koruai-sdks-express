@@ -1,9 +1,9 @@
 /**
- * Configuration for Anomaly middleware
+ * Configuration for KoruAI middleware
  */
-export interface AnomalyMiddlewareConfig {
+export interface KoruAIMiddlewareConfig {
   /**
-   * Your API key for authentication with Anomaly AI servers
+   * Your API key for authentication with KoruAI servers
    */
   apiKey: string;
   /**

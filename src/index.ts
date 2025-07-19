@@ -1,9 +1,9 @@
-import { Anomaly } from "./middleware";
+import { KoruAI } from "./middleware";
 
 // ES Module default export
-export default Anomaly;
+export default KoruAI;
 
 // CommonJS compatibility
-module.exports = Anomaly;
-module.exports.default = Anomaly;
-module.exports.Anomaly = Anomaly;
+module.exports = KoruAI;
+module.exports.default = KoruAI;
+module.exports.KoruAI = KoruAI;

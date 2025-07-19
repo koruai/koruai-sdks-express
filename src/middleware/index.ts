@@ -1,7 +1,7 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import { collectRequest, createSDKRequestData } from "../helper/collectRequest";
 import { PolicyManager } from "../helper/Policy";
-import { AnomalyMiddlewareConfig } from "../interfaces/AnomalyMiddleware";
+import { KoruAIMiddlewareConfig } from "../interfaces/KoruAIMiddlewareInterface";
 
 /**
  * Creates Express middleware for AI-powered security monitoring.
@@ -14,7 +14,7 @@ import { AnomalyMiddlewareConfig } from "../interfaces/AnomalyMiddleware";
  * Default is false.
  * @returns Express middleware function
  */
-export function Anomaly(config: AnomalyMiddlewareConfig): RequestHandler {
+export function KoruAI(config: KoruAIMiddlewareConfig): RequestHandler {
   const policyManager = new PolicyManager(
     config.blockRealtime,
     config.appId,

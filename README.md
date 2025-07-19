@@ -1,34 +1,34 @@
-# Anomaly Express
+# KoruAI Express
 
-Welcome to **Anomaly Express**! 🚦
+Welcome to **KoruAI Express**! 🚦
 
 This package helps you add AI-powered security monitoring to your Express.js apps. It quietly watches your API traffic and lets you know if something looks fishy—so you can focus on building, not worrying about threats.
 
 ## What does it do?
 
 - Monitors incoming requests and outgoing responses
-- Sends request data to Anomaly AI servers for analysis
+- Sends request data to KoruAI servers for analysis
 - Can block suspicious requests in real-time (if you want)
 - Super easy to plug into any Express app
 
 ## Installation
 
 ```bash
-npm install anomaly-express
+npm install koruai
 ```
 
 ## Quick Start
 
-Here's how you can add Anomaly to your Express app:
+Here's how you can add KoruAI to your Express app:
 
 ```js
 import express from "express";
-import Anomaly from "anomaly-express";
+import KoruAI from "koruai";
 
 const app = express();
 
 app.use(
-  Anomaly({
+  KoruAI({
     apiKey: "YOUR_API_KEY",
     appId: "YOUR_APP_ID",
     blockRealtime: true, // Optional: block requests if anomaly detected
@@ -47,7 +47,7 @@ app.listen(3000, () => {
 
 ## Config Options
 
-- `apiKey` (**required**): Your Anomaly AI API key
+- `apiKey` (**required**): Your KoruAI API key
 - `appId` (**required**): Your app's ID
 - `blockRealtime` (optional): If `true`, blocks requests that look like anomalies
 
