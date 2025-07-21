@@ -18,7 +18,7 @@
   "author": "aboveStars",
   "license": "Apache 2.0",
   "description": "AI-powered security monitoring middleware for Express.js applications. Detects anomalies and threats in real-time with intelligent request analysis.",
-  "repository": "https://github.com/aboveStars/koruai-sdks-express",
+  "repository": "https://github.com/koruai/koruai-sdks-express",
   "devDependencies": {
     "@types/node": "^24.0.3",
     "typescript": "^5.8.3"
