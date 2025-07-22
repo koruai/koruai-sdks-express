@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 const environment: "production" | "development" | "local_development" =
-  "development";
+  "production";
 
 export const REQUEST_COLLECTION_ENDPOINT =
   environment === "production"
